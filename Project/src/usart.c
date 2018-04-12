@@ -3,6 +3,8 @@
 volatile char received_string[MAX_STRLEN+1]; // this will hold the recieved string
 volatile char received_string2[MAX_STRLEN+1]; // this will hold the recieved string
 volatile int newData=0;
+volatile	int variables[numOfVariables];
+
 
 
 
@@ -331,6 +333,15 @@ void USART6_IRQHandler(void){
 				//buffer clean	
 				for(i=0;i<MAX_STRLEN;i++)
 					received_string[i]=0;
+				USART_puts(USART6, received_string2);	
+		sscanf((const char *)received_string2, "%d %d %d %d %d %d", 
+			&variables[0], &variables[1], &variables[2], &variables[3], &variables[4], &variables[5]);		
+		//buffer clean
+		for(i=0;i<MAX_STRLEN;i++)  
+			received_string2[i]=0;
+		newData=0;
+		USART_ITConfig(USART6, USART_IT_RXNE, ENABLE); // enable the USART1 receive interrupt 
+	
 			}
 		}
 	}
