@@ -7,23 +7,21 @@ int main(void) {
 	char str[200];
 	double data[100];
 	int i;
-//	init_I2C1(); 
+	init_I2C1(); 
 	init_USART6(28800); 	
 	resetButtonD5();
-	SystemInit();
+//	SystemInit();
 	/* Initialize MCO2 output, pin PC9 */
-	TM_MCOOUTPUT_InitMCO2();
+//	TM_MCOOUTPUT_InitMCO2();
 	/* Set MCO2 output = SYSCLK / 4 */
-	TM_MCOOUTPUT_SetOutput2(TM_MCOOUTPUT2_Source_SYSCLK, TM_MCOOUTPUT_Prescaler_5);
+//	TM_MCOOUTPUT_SetOutput2(TM_MCOOUTPUT2_Source_SYSCLK, TM_MCOOUTPUT_Prescaler_5);
 
-//	registerSetup();	
-		configAudio();
+	registerSetup();	
+	//	configAudio();
 
 	
-	variables[2]=1;
-	variables[5]=20010;
 
-for (i = 0; i <101 ; i++)
+for (i = 0; i <11 ; i++)
  {
  data[i] =10000* sin(i*PI/50)+10000* sin(i*PI/25);
 	 sprintf(str, "\r\n data[%d] ima vrijednost: %g\r\n",i,data[i]);		

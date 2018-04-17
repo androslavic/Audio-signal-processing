@@ -1,9 +1,9 @@
 #include "dsp.h"
 
 
-extern volatile	double bufferInput[3]={0};
-extern volatile double bufferOutput[3]={0};
-extern volatile double temp=0;
+volatile	double bufferInput[3]={0};
+volatile double bufferOutput[3]={0};
+volatile double temp=0;
 
 
 
@@ -21,7 +21,12 @@ void shiftBuffers (void) {
 void outDSP_callback (int* data){
 	
 	
-	double w0,alpha,b0,b1,b2,a0,a1,a2;
+	double a0=parameter[0];
+	double a1=parameter[1];
+	double a2=parameter[2];
+	double b0=parameter[3];
+	double b1=parameter[4];
+	double b2=parameter[5];
 	
 //first sound effect using value[3] 
 	if (variables[0]==1){
@@ -38,43 +43,7 @@ void outDSP_callback (int* data){
 		
 	if((temp-variables[5])>100 || (temp-variables[5])<-100)
 		{
-		
-		if (variables[5]>20000)
-		//filtriraj sve ispod frekvencije variables[5]-20000
-						w0=2*pi*(variables[5]-20000)/Fs;
-		else
-		//filtriraj sve iznad frekvencije variables[5]
-						w0=2*pi*variables[5]/Fs;
-		
-		alpha=sin(w0)/(2*Q);
 
-		
-			//HPF  H(s) = s^2 / (s^2 + s/Q + 1)
-			if (variables[5]>20000){
-						
-						
-						b0 =  (1 + cos(w0))/2;
-            b1 = -(1 + cos(w0));
-            b2 =  (1 + cos(w0))/2;
-            a0 =   1 + alpha;
-            a1 =  -2*cos(w0);
-            a2 =   1 - alpha;		
-						
-			}
-			//LPF    H(s) = 1 / (s^2 + s/Q + 1)
-			else if (variables[5]<20000){
-
-						
-						b0 =  (1 - cos(w0))/2;
-            b1 =   1 - cos(w0);
-            b2 =  (1 - cos(w0))/2;
-            a0 =   1 + alpha;
-            a1 =  -2*cos(w0);
-            a2 =   1 - alpha;	
-			}
-		}
-		
-			temp=variables[5];
 			shiftBuffers();
 			
 			bufferInput[0]=*data;
@@ -85,4 +54,5 @@ void outDSP_callback (int* data){
 
 
 	}
+}
 }

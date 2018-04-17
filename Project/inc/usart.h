@@ -18,14 +18,17 @@ void init_USART1(uint32_t baudrate);
 void init_USART6(uint32_t baudrate);
 void USART_puts(USART_TypeDef* USARTx, volatile char *s);
 void USART1_IRQHandler(void);
+void USART6_IRQHandler(void);
 
 
 #define numOfVariables 6
+#define numOfParameters 6
 #define MAX_STRLEN 200 // this is the maximum string length of our string in characters
 
 extern volatile char received_string[MAX_STRLEN+1]; // this will hold the recieved string
 extern volatile char received_string2[MAX_STRLEN+1]; // this will hold the recieved string
 extern volatile	int variables[numOfVariables];
+extern volatile	double parameter[numOfParameters];
 extern volatile int newData;
 
 #endif

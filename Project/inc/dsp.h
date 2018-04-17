@@ -16,7 +16,6 @@ void shiftBuffers (void);
 #define minValue4 0
 #define minValue5 0
 #define minValue6 0
-
 #define maxValue4 100
 #define maxValue5 100
 #define maxValue6 40000
@@ -25,3 +24,4 @@ void shiftBuffers (void);
 
 extern volatile	double bufferInput[3];
 extern volatile double bufferOutput[3];
+extern volatile double parameter[numOfParameters];

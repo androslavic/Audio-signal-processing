@@ -4,6 +4,7 @@ volatile char received_string[MAX_STRLEN+1]; // this will hold the recieved stri
 volatile char received_string2[MAX_STRLEN+1]; // this will hold the recieved string
 volatile int newData=0;
 volatile	int variables[numOfVariables];
+volatile	double parameter[numOfParameters];
 
 
 
@@ -138,7 +139,7 @@ void init_USART6(uint32_t baudrate){
 	 * so that the USART6 can take over control of the 
 	 * pins
 	 */
-	GPIO_PinAFConfig(GPIOC, GPIO_PinSource6, GPIO_AF_USART6); //
+	GPIO_PinAFConfig(GPIOC, GPIO_PinSource6, GPIO_AF_USART6);
 	GPIO_PinAFConfig(GPIOC, GPIO_PinSource7, GPIO_AF_USART6);
 	
 	/* Now the USART_InitStruct is used to define the 
@@ -159,6 +160,7 @@ void init_USART6(uint32_t baudrate){
 	 * if the USART6 receive interrupt occurs
 	 */
 	USART_ITConfig(USART6, USART_IT_RXNE, ENABLE); // enable the USART6 receive interrupt 
+
 	
 	NVIC_InitStructure.NVIC_IRQChannel = USART6_IRQn;		 // we want to configure the USART6 interrupts
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;// this sets the priority group of the USART6 interrupts
@@ -270,7 +272,7 @@ void USART6_Configuration(void)
 void USART1_IRQHandler(void){
 	
 	if(newData == 0) {		
-		// check if the USART1 receive interrupt flag was set
+		// check if the USART6 receive interrupt flag was set
 		if( USART_GetITStatus(USART1, USART_IT_RXNE) ) {
 		
 			static uint8_t cnt = 0; // this counter is used to determine the string length
@@ -289,19 +291,36 @@ void USART1_IRQHandler(void){
 				received_string[cnt] = '\n';
 				received_string2[cnt] = '\n';
 				cnt = 0;
-				//USART_puts(USART1, received_string);
 				
-				USART_ITConfig(USART1, USART_IT_RXNE, DISABLE); // enable the USART1 receive interrupt 
+				USART_ITConfig(USART6, USART_IT_RXNE, DISABLE); // enable the USART1 receive interrupt 
 				
 				newData = 1;
 		
 				//buffer clean	
 				for(i=0;i<MAX_STRLEN;i++)
 					received_string[i]=0;
+				
+				USART_puts(USART1, received_string2);	
+		//sscanf((const char *)received_string2, "%d %d %d %d %d %d %e %e %e %e %e %e ", 
+		//	&variables[0], &variables[1], &variables[2], &variables[3], &variables[4],
+	//	&variables[5], &parameter[0], &parameter[1], &parameter[2], &parameter[3], &parameter[4], &parameter[5]);		
+		
+				
+				sscanf((const char *)received_string2, "%d %d %d %d %d %d", 
+			&variables[0], &variables[1], &variables[2], &variables[3], &variables[4], &variables[5]);		
+		
+		
+		//buffer clean
+		for(i=0;i<MAX_STRLEN;i++)  
+			received_string2[i]=0;
+		newData=0;
+		USART_ITConfig(USART1, USART_IT_RXNE, ENABLE); // enable the USART1 receive interrupt 
+	
 			}
 		}
 	}
 }
+
 void USART6_IRQHandler(void){
 	
 	if(newData == 0) {		
@@ -324,7 +343,6 @@ void USART6_IRQHandler(void){
 				received_string[cnt] = '\n';
 				received_string2[cnt] = '\n';
 				cnt = 0;
-				//USART_puts(USART6, received_string);
 				
 				USART_ITConfig(USART6, USART_IT_RXNE, DISABLE); // enable the USART1 receive interrupt 
 				
@@ -333,14 +351,22 @@ void USART6_IRQHandler(void){
 				//buffer clean	
 				for(i=0;i<MAX_STRLEN;i++)
 					received_string[i]=0;
+				
 				USART_puts(USART6, received_string2);	
-		sscanf((const char *)received_string2, "%d %d %d %d %d %d", 
+		//sscanf((const char *)received_string2, "%d %d %d %d %d %d %e %e %e %e %e %e ", 
+		//	&variables[0], &variables[1], &variables[2], &variables[3], &variables[4],
+	//	&variables[5], &parameter[0], &parameter[1], &parameter[2], &parameter[3], &parameter[4], &parameter[5]);		
+		
+				
+				sscanf((const char *)received_string2, "%d %d %d %d %d %d", 
 			&variables[0], &variables[1], &variables[2], &variables[3], &variables[4], &variables[5]);		
+		
+		
 		//buffer clean
 		for(i=0;i<MAX_STRLEN;i++)  
 			received_string2[i]=0;
 		newData=0;
-		USART_ITConfig(USART6, USART_IT_RXNE, ENABLE); // enable the USART1 receive interrupt 
+		USART_ITConfig(USART6, USART_IT_RXNE, ENABLE); // enable the USART6 receive interrupt 
 	
 			}
 		}
