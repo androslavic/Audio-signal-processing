@@ -8,6 +8,9 @@
 #include <stm32f4xx_gpio.h>
 #include <stm32f4xx_rcc.h>
 #include <stm32f4xx_usart.h> // under Libraries/STM32F4xx_StdPeriph_Driver/inc and src
+#include <stdio.h>
+#include <string.h>
+
 
 
 void Delay(__IO uint32_t nCount);
@@ -18,10 +21,11 @@ void USART1_IRQHandler(void);
 
 
 #define numOfVariables 6
-#define MAX_STRLEN 20 // this is the maximum string length of our string in characters
+#define MAX_STRLEN 200 // this is the maximum string length of our string in characters
 
 extern volatile char received_string[MAX_STRLEN+1]; // this will hold the recieved string
 extern volatile char received_string2[MAX_STRLEN+1]; // this will hold the recieved string
+extern volatile	int variables[numOfVariables];
 extern volatile int newData;
 
 #endif
