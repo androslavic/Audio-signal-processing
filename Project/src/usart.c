@@ -4,7 +4,7 @@ volatile char received_string[MAX_STRLEN+1]; // this will hold the recieved stri
 volatile char received_string2[MAX_STRLEN+1]; // this will hold the recieved string
 volatile int newData=0;
 volatile	int variables[numOfVariables];
-volatile	double parameter[numOfParameters];
+volatile	int parameter[numOfParameters];
 
 
 
@@ -276,9 +276,12 @@ void USART1_IRQHandler(void){
 		if( USART_GetITStatus(USART1, USART_IT_RXNE) ) {
 		
 			static uint8_t cnt = 0; // this counter is used to determine the string length
-			char t = USART1->DR; // the character from the USART1 data register is saved in t
+			char t = USART1->DR; // the character from the USART6 data register is saved in t
 			int i;
-	
+			int IRQvariables[numOfVariables]={0};
+			int IRQparameter[numOfParameters]={0};
+			char str[200];
+			
 			/* check if the received character is not the LF character (used to determine end of string) 
 			* or the if the maximum string length has been been reached 
 			*/
@@ -292,7 +295,7 @@ void USART1_IRQHandler(void){
 				received_string2[cnt] = '\n';
 				cnt = 0;
 				
-				USART_ITConfig(USART6, USART_IT_RXNE, DISABLE); // enable the USART1 receive interrupt 
+				USART_ITConfig(USART1, USART_IT_RXNE, DISABLE); // enable the USART1 receive interyrupt 
 				
 				newData = 1;
 		
@@ -300,26 +303,44 @@ void USART1_IRQHandler(void){
 				for(i=0;i<MAX_STRLEN;i++)
 					received_string[i]=0;
 				
-				USART_puts(USART1, received_string2);	
-		//sscanf((const char *)received_string2, "%d %d %d %d %d %d %e %e %e %e %e %e ", 
-		//	&variables[0], &variables[1], &variables[2], &variables[3], &variables[4],
-	//	&variables[5], &parameter[0], &parameter[1], &parameter[2], &parameter[3], &parameter[4], &parameter[5]);		
-		
+				USART_puts(USART6, received_string2);
 				
-				sscanf((const char *)received_string2, "%d %d %d %d %d %d", 
-			&variables[0], &variables[1], &variables[2], &variables[3], &variables[4], &variables[5]);		
+		sscanf((const char *)received_string2, "%d %d %d %d %d %d %d %d %d %d %d %d", 
+			&IRQvariables[0], &IRQvariables[1], &IRQvariables[2], &IRQvariables[3], &IRQvariables[4],
+		&IRQvariables[5], &IRQparameter[0], &IRQparameter[1], &IRQparameter[2], &IRQparameter[3], &IRQparameter[4], &IRQparameter[5]);		
 		
+		
+		for (i=0;i<6;i++)
+		{
+		variables[i]=IRQvariables[i];
+		parameter[i]=IRQparameter[i];
+		}
+		
+//			sprintf(str, "\r\n IRQvariables[0]=%d , IRQvariables[1]=%d , IRQvariables[2]=%d , IRQvariables[3]=%d , IRQvariables[4]=%d , IRQvariables[5]=%d  \r\n",
+//		IRQvariables[0], IRQvariables[1], IRQvariables[2], IRQvariables[3], IRQvariables[4],IRQvariables[5]);
+//		USART_puts(USART6, str);	
+//		sprintf(str, "\r\n IRQparameter[0]=%d , IRQparameter[1]=%d , IRQparameter[2]=%d , IRQparameter[3]=%d , IRQparameter[4]=%d , IRQparameter[5]=%d  \r\n",
+//		IRQparameter[0], IRQparameter[1], IRQparameter[2], IRQparameter[3], IRQparameter[4], IRQparameter[5]);
+//		USART_puts(USART6, str);	
+//		
+		sprintf(str, "\r\n variables[0]=%d , variables[1]=%d , variables[2]=%d , variables[3]=%d , variables[4]=%d , variables[5]=%d  \r\n",
+		variables[0], variables[1], variables[2], variables[3], variables[4],variables[5]);
+		USART_puts(USART6, str);	
+		sprintf(str, "\r\n parameter[0]=%d , parameter[1]=%d , parameter[2]=%d , parameter[3]=%d , parameter[4]=%d , parameter[5]=%d  \r\n",
+		parameter[0], parameter[1], parameter[2], parameter[3], parameter[4], parameter[5]);
+		USART_puts(USART6, str);	
 		
 		//buffer clean
 		for(i=0;i<MAX_STRLEN;i++)  
 			received_string2[i]=0;
 		newData=0;
-		USART_ITConfig(USART1, USART_IT_RXNE, ENABLE); // enable the USART1 receive interrupt 
+		USART_ITConfig(USART1, USART_IT_RXNE, ENABLE); // enable the USART6 receive interrupt 
 	
 			}
 		}
 	}
 }
+
 
 void USART6_IRQHandler(void){
 	
@@ -330,7 +351,10 @@ void USART6_IRQHandler(void){
 			static uint8_t cnt = 0; // this counter is used to determine the string length
 			char t = USART6->DR; // the character from the USART6 data register is saved in t
 			int i;
-	
+			int IRQvariables[numOfVariables]={0};
+			int IRQparameter[numOfParameters]={0};
+			char str[200];
+			
 			/* check if the received character is not the LF character (used to determine end of string) 
 			* or the if the maximum string length has been been reached 
 			*/
@@ -344,7 +368,7 @@ void USART6_IRQHandler(void){
 				received_string2[cnt] = '\n';
 				cnt = 0;
 				
-				USART_ITConfig(USART6, USART_IT_RXNE, DISABLE); // enable the USART1 receive interrupt 
+				USART_ITConfig(USART6, USART_IT_RXNE, DISABLE); // enable the USART1 receive interyrupt 
 				
 				newData = 1;
 		
@@ -352,15 +376,32 @@ void USART6_IRQHandler(void){
 				for(i=0;i<MAX_STRLEN;i++)
 					received_string[i]=0;
 				
-				USART_puts(USART6, received_string2);	
-		//sscanf((const char *)received_string2, "%d %d %d %d %d %d %e %e %e %e %e %e ", 
-		//	&variables[0], &variables[1], &variables[2], &variables[3], &variables[4],
-	//	&variables[5], &parameter[0], &parameter[1], &parameter[2], &parameter[3], &parameter[4], &parameter[5]);		
-		
+				USART_puts(USART6, received_string2);
 				
-				sscanf((const char *)received_string2, "%d %d %d %d %d %d", 
-			&variables[0], &variables[1], &variables[2], &variables[3], &variables[4], &variables[5]);		
+		sscanf((const char *)received_string2, "%d %d %d %d %d %d %d %d %d %d %d %d", 
+			&IRQvariables[0], &IRQvariables[1], &IRQvariables[2], &IRQvariables[3], &IRQvariables[4],
+		&IRQvariables[5], &IRQparameter[0], &IRQparameter[1], &IRQparameter[2], &IRQparameter[3], &IRQparameter[4], &IRQparameter[5]);		
 		
+		
+		for (i=0;i<6;i++)
+		{
+		variables[i]=IRQvariables[i];
+		parameter[i]=IRQparameter[i];
+		}
+		
+			sprintf(str, "\r\n IRQvariables[0]=%d , IRQvariables[1]=%d , IRQvariables[2]=%d , IRQvariables[3]=%d , IRQvariables[4]=%d , IRQvariables[5]=%d  \r\n",
+		IRQvariables[0], IRQvariables[1], IRQvariables[2], IRQvariables[3], IRQvariables[4],IRQvariables[5]);
+		USART_puts(USART6, str);	
+		sprintf(str, "\r\n IRQparameter[0]=%d , IRQparameter[1]=%d , IRQparameter[2]=%d , IRQparameter[3]=%d , IRQparameter[4]=%d , IRQparameter[5]=%d  \r\n",
+		IRQparameter[0], IRQparameter[1], IRQparameter[2], IRQparameter[3], IRQparameter[4], IRQparameter[5]);
+		USART_puts(USART6, str);	
+//		
+		sprintf(str, "\r\n variables[0]=%d , variables[1]=%d , variables[2]=%d , variables[3]=%d , variables[4]=%d , variables[5]=%d  \r\n",
+		variables[0], variables[1], variables[2], variables[3], variables[4],variables[5]);
+		USART_puts(USART6, str);	
+		sprintf(str, "\r\n parameter[0]=%d , parameter[1]=%d , parameter[2]=%d , parameter[3]=%d , parameter[4]=%d , parameter[5]=%d  \r\n",
+		parameter[0], parameter[1], parameter[2], parameter[3], parameter[4], parameter[5]);
+		USART_puts(USART6, str);	
 		
 		//buffer clean
 		for(i=0;i<MAX_STRLEN;i++)  

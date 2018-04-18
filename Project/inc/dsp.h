@@ -1,7 +1,7 @@
 #include "usart.h"
 #include "math.h"
 
-void outDSP_callback (int* data);
+void outDSP_callback (double* data);
 void shiftBuffers (void);
 
 #define pi 3.141592
@@ -24,4 +24,4 @@ void shiftBuffers (void);
 
 extern volatile	double bufferInput[3];
 extern volatile double bufferOutput[3];
-extern volatile double parameter[numOfParameters];
+extern volatile int parameter[numOfParameters];

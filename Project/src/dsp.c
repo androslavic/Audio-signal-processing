@@ -18,15 +18,15 @@ void shiftBuffers (void) {
 
 
 
-void outDSP_callback (int* data){
+void outDSP_callback (double* data){
 	
 	
-	double a0=parameter[0];
-	double a1=parameter[1];
-	double a2=parameter[2];
-	double b0=parameter[3];
-	double b1=parameter[4];
-	double b2=parameter[5];
+	int a0=parameter[0];
+	int a1=parameter[1];
+	int a2=parameter[2];
+	int b0=parameter[3];
+	int b1=parameter[4];
+	int b2=parameter[5];
 	
 //first sound effect using value[3] 
 	if (variables[0]==1){
@@ -41,8 +41,7 @@ void outDSP_callback (int* data){
 //third sound effect using value[5]
 	if (variables[2]==1){
 		
-	if((temp-variables[5])>100 || (temp-variables[5])<-100)
-		{
+		
 
 			shiftBuffers();
 			
@@ -55,4 +54,4 @@ void outDSP_callback (int* data){
 
 	}
 }
-}
+

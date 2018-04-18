@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "auxiliary.h"
 
 
 void Delay(__IO uint32_t nCount);
@@ -28,7 +29,7 @@ void USART6_IRQHandler(void);
 extern volatile char received_string[MAX_STRLEN+1]; // this will hold the recieved string
 extern volatile char received_string2[MAX_STRLEN+1]; // this will hold the recieved string
 extern volatile	int variables[numOfVariables];
-extern volatile	double parameter[numOfParameters];
+extern volatile	int parameter[numOfParameters];
 extern volatile int newData;
 
 #endif
