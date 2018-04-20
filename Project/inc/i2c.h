@@ -370,7 +370,7 @@ uint8_t TM_I2C_ReadAck(I2C_TypeDef* I2Cx);
  */
 void TM_I2C_WriteData(I2C_TypeDef* I2Cx, uint8_t data);
 
-/**
+/** 
  * @brief  Callback for custom pins initialization.
  * 
  *         When you call TM_I2C_Init() function, and if you pass TM_I2C_PinsPack_Custom to function,
@@ -381,6 +381,13 @@ void TM_I2C_WriteData(I2C_TypeDef* I2Cx, uint8_t data);
  * @note   With __weak parameter to prevent link errors if not defined by user
  */
 void TM_I2C_InitCustomPinsCallback(I2C_TypeDef* I2Cx, uint16_t AlternateFunction);
+
+void init_I2C1(void);
+void I2C_start(I2C_TypeDef* I2Cx, uint8_t address, uint8_t direction);
+void I2C_write(I2C_TypeDef* I2Cx, uint8_t data);
+uint8_t I2C_read_ack(I2C_TypeDef* I2Cx);
+uint8_t I2C_read_nack(I2C_TypeDef* I2Cx);
+void I2C_stop(I2C_TypeDef* I2Cx);
 
 /**
  * @}

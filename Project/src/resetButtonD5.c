@@ -4,7 +4,7 @@
 
 void resetButtonD5(void){
 
-	int i,j;
+	int i;
 	GPIO_InitTypeDef GPIO_InitDef;
 
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE);
@@ -17,10 +17,8 @@ void resetButtonD5(void){
 	//Initialize pins
 	GPIO_Init(GPIOD, &GPIO_InitDef);
 	
-	for (i=0;i<500000;i++)
-	{
-	j=0;
-	}
+	for (i=0;i<500000;i++);
+	
 	GPIO_SetBits(GPIOD, GPIO_Pin_5);
 	
 	}
