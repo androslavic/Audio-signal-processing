@@ -17,7 +17,7 @@
 #define I2C_SDA GPIO_Pin_9
 
 /** GPIOC **/
-#define I2S_MCLK GPIO_Pin_7
+#define I2S_BCLK GPIO_Pin_7
 #define I2S_SCLK GPIO_Pin_10
 #define I2S_SD GPIO_Pin_12
 #define I2S_SD_EXT GPIO_Pin_2

@@ -4,7 +4,7 @@ void init_I2S() {
 
 
 	I2S_InitTypeDef I2S_InitStruct;
-	I2S_InitTypeDef I2S3ext_InitStruct;
+	I2S_InitTypeDef I2Sext_InitStruct;
 	GPIO_InitTypeDef GPIO_InitStruct;
 	
 		RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
@@ -20,16 +20,16 @@ void init_I2S() {
 		I2S_InitStruct.I2S_AudioFreq = I2S_AudioFreq_48k;
 		I2S_InitStruct.I2S_CPOL = I2S_CPOL_Low;
     
-    I2S3ext_InitStruct.I2S_Mode = I2S_Mode_MasterTx;
-    I2S3ext_InitStruct.I2S_Standard = I2S_Standard_Phillips;
-    I2S3ext_InitStruct.I2S_DataFormat = I2S_DataFormat_16b;
-    I2S3ext_InitStruct.I2S_MCLKOutput = I2S_MCLKOutput_Enable;
-    I2S3ext_InitStruct.I2S_AudioFreq = I2S_AudioFreq_48k;
-    I2S3ext_InitStruct.I2S_CPOL = I2S_CPOL_Low;
+    I2Sext_InitStruct.I2S_Mode = I2S_Mode_MasterTx;
+    I2Sext_InitStruct.I2S_Standard = I2S_Standard_Phillips;
+    I2Sext_InitStruct.I2S_DataFormat = I2S_DataFormat_16b;
+    I2Sext_InitStruct.I2S_MCLKOutput = I2S_MCLKOutput_Enable;
+    I2Sext_InitStruct.I2S_AudioFreq = I2S_AudioFreq_48k;
+    I2Sext_InitStruct.I2S_CPOL = I2S_CPOL_Low;
 	
 	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AF;
 	GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;
-	GPIO_InitStruct.GPIO_Pin = I2S_SD_EXT |I2S_SCLK | I2S_SD | I2S_MCLK;
+	GPIO_InitStruct.GPIO_Pin = I2S_SD_EXT |I2S_SCLK | I2S_SD | I2S_BCLK;
 	GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
 	GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_Init(GPIOC, &GPIO_InitStruct);
@@ -37,20 +37,20 @@ void init_I2S() {
 	GPIO_InitStruct.GPIO_Pin = I2S_WS;
 	GPIO_Init(GPIOA, &GPIO_InitStruct);
 	
-	//I2S_WS
+	//I2S_WCLK +
 	GPIO_PinAFConfig(GPIOA, GPIO_PinSource4, GPIO_AF_SPI3);
 	//I2S_SD_EXT
 	GPIO_PinAFConfig(GPIOC, GPIO_PinSource2, GPIO_AF_SPI3);
-	//I2S_MCLK
+	//I2S_MCLK +
 	GPIO_PinAFConfig(GPIOC, GPIO_PinSource7, GPIO_AF_SPI3);
-	//I2S_SCLK
+	//I2S_BCLK +
 	GPIO_PinAFConfig(GPIOC, GPIO_PinSource10, GPIO_AF_SPI3);
 	//I2S_SD
 	GPIO_PinAFConfig(GPIOC, GPIO_PinSource12, GPIO_AF_SPI3);	
 	
 	RCC_PLLI2SCmd(ENABLE);
 	I2S_Init(SPI3, &I2S_InitStruct);
-  I2S_FullDuplexConfig(I2S3ext,  &I2S3ext_InitStruct);
+  I2S_FullDuplexConfig(I2S2ext,  &I2Sext_InitStruct);
   I2S_Cmd(SPI3, ENABLE);
 
 	
@@ -58,6 +58,29 @@ void init_I2S() {
 
 	
 void	init_MCLK(void){
+	
+	//f=12228000 Hz
+	//fs=48000 Hz
+	uint16_t PLLI2SN = 192;
+	uint16_t PLLI2SR = 5;
+	
+	/* Initialize MCO2 output, pin PC9 */
+	TM_GPIO_Init(GPIOC, GPIO_PIN_9, TM_GPIO_Mode_AF, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High);
+	RCC_PLLI2SConfig( PLLI2SN,  PLLI2SR);
+	RCC_MCO2Config (RCC_MCO2Source_PLLI2SCLK,RCC_MCO2Div_1);
+	GPIO_PinAFConfig(GPIOC, GPIO_PinSource9, GPIO_AF_MCO);
+	
+	
+}
+void	init_BCLK(void){
+	
+	//f=1536000Hz
+	//fs=48000 Hz
+	
+
+	
+}
+void	init_WCLK(void){
 	
 	//fs=48000 Hz
 	uint16_t PLLI2SN = 192;

@@ -22,7 +22,7 @@ void shiftBuffers (void);
 
 
 
-extern volatile	double bufferInput[3];
-extern volatile double bufferOutput[3];
+extern volatile	double bufferInput[5];
+extern volatile double bufferOutput[5];
 extern volatile int parameter[numOfParameters];
 extern volatile	int variables[numOfVariables];

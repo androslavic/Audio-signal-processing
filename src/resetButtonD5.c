@@ -18,7 +18,6 @@ void resetButtonD5(void){
 	GPIO_Init(GPIOD, &GPIO_InitDef);
 	
 	for (i=0;i<500000;i++);
-	
 	GPIO_SetBits(GPIOD, GPIO_Pin_5);
 	
 	
